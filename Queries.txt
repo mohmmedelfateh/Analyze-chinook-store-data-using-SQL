@@ -1,0 +1,56 @@
+Query 1
+Number of Files sold in chinook
+
+SELECT
+  MediaType.Name AS Type_File,
+  COUNT(InvoiceLine.Quantity) AS Num_of_files_Sold
+FROM MediaType
+JOIN Track
+  ON Track.MediaTypeId = MediaType.MediaTypeId
+JOIN InvoiceLine
+  ON InvoiceLine.TrackId = Track.TrackId
+GROUP BY MediaType.Name
+ORDER BY COUNT(InvoiceLine.Quantity) DESC;
+-------------------------------------------------------
+Query 2
+Timeline of the company’s total sales 
+
+SELECT
+  STRFTIME("%Y-%m", Invoice.InvoiceDate) 'Line Time' ,
+  SUM(invoice.total) 'Total Sales'
+FROM Customer
+JOIN Invoice
+  ON Customer.CustomerId = Invoice.CustomerId
+GROUP BY STRFTIME("%Y-%m", Invoice.InvoiceDate)
+ORDER BY STRFTIME("%Y-%m", Invoice.InvoiceDate)
+--------------------------------------------------------
+Query 3
+Tracks number for each Genre
+
+SELECT
+  Genre.Name 'Genre Name',
+  COUNT(Track.GenreId) 'The number of tracks available'
+FROM Track
+JOIN genre
+  ON Track.GenreId = Genre.GenreId
+GROUP BY Genre.Name
+ORDER BY COUNT(Track.GenreId) DESC
+--------------------------------------------------------
+Query 4
+ The most popular music genres in North America
+
+SELECT
+  Genre.Name 'Genre Name',
+  COUNT(Track.TrackId) 'The number of tracks available'
+FROM Customer
+JOIN Invoice
+  ON Customer.CustomerId = Invoice.CustomerId
+JOIN InvoiceLine
+  ON InvoiceLine.InvoiceId = Invoice.InvoiceId
+JOIN Track
+  ON Track.TrackId = InvoiceLine.TrackId
+JOIN Genre
+  ON Track.GenreId = Genre.GenreId
+WHERE Customer.Country = 'Canada' OR 'USA'
+GROUP BY Genre.Name
+ORDER BY COUNT(Track.TrackId) DESC
